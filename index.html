@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basketball Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Nav -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="ball-icon">🏀</span>
+      <span class="brand-name">Basketball Hub</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#standings">Standings</a></li>
+      <li><a href="#scores">Scores</a></li>
+      <li><a href="#players">Players</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-content">
+      <p class="hero-label">2025–26 Season</p>
+      <h1 class="hero-title">The Court<br /><span>Never Sleeps</span></h1>
+      <p class="hero-sub">Live scores, standings, and player stats — all in one place.</p>
+      <a href="#scores" class="btn btn-primary">View Today's Games</a>
+    </div>
+    <div class="hero-ball">
+      <div class="basketball">
+        <div class="line line-h"></div>
+        <div class="line line-v"></div>
+        <div class="line line-a"></div>
+        <div class="line line-b"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Scores -->
+  <section class="section" id="scores">
+    <div class="container">
+      <h2 class="section-title">Today's Scores</h2>
+      <div class="scores-grid" id="scores-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Standings -->
+  <section class="section section-dark" id="standings">
+    <div class="container">
+      <h2 class="section-title">League Standings</h2>
+      <div class="standings-wrapper">
+        <div class="conference">
+          <h3 class="conf-title">Eastern Conference</h3>
+          <table class="standings-table">
+            <thead>
+              <tr><th>Team</th><th>W</th><th>L</th><th>PCT</th></tr>
+            </thead>
+            <tbody id="east-standings"></tbody>
+          </table>
+        </div>
+        <div class="conference">
+          <h3 class="conf-title">Western Conference</h3>
+          <table class="standings-table">
+            <thead>
+              <tr><th>Team</th><th>W</th><th>L</th><th>PCT</th></tr>
+            </thead>
+            <tbody id="west-standings"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top Players -->
+  <section class="section" id="players">
+    <div class="container">
+      <h2 class="section-title">Top Performers</h2>
+      <div class="players-grid" id="players-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>🏀 Basketball Hub &mdash; Built with passion for the game.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
