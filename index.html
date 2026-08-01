@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>March Madness Fantasy 2026</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --card: #161b22;
+  --card2: #21262d;
+  --border: #30363d;
+  --accent: #f97316;
+  --blue: #3b82f6;
+  --green: #22c55e;
+  --red: #ef4444;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --radius: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; font-size: 14px; }
+
+.nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; }
+.nav-brand { color: var(--accent); font-size: 17px; font-weight: 700; padding: 13px 20px 13px 0; margin-right: 12px; border-right: 1px solid var(--border); white-space: nowrap; }
+.nav-tab { padding: 13px 16px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; font-size: 13px; }
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.nav-status { font-size: 12px; color: var(--muted); }
+.nav-status b { color: var(--text); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.page { padding: 14px 20px; max-width: 1440px; margin: 0 auto; }
+
+.grid-draft { display: grid; grid-template-columns: 260px 1fr 260px; gap: 14px; align-items: start; }
+.grid-lb { display: grid; grid-template-columns: 1fr 380px; gap: 14px; align-items: start; }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.card-header { padding: 11px 14px; border-bottom: 1px solid var(--border); font-weight: 600; display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+.card-body { padding: 12px 14px; }
+
+.clock-card { background: linear-gradient(135deg, #1a1f2e, #1e2840); border: 1px solid var(--accent); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; text-align: center; }
+.clock-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+.clock-team { font-size: 20px; font-weight: 700; }
+.clock-pick { color: var(--text); font-size: 12px; margin-top: 3px; }
+.clock-round { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+table { width: 100%; border-collapse: collapse; }
+th { padding: 8px 10px; text-align: left; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 1px solid var(--border); cursor: pointer; white-space: nowrap; user-select: none; }
+th:hover { color: var(--text); }
+td { padding: 7px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--card2); }
+tr.is-drafted td { opacity: 0.38; }
+
+.btn { padding: 5px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: 500; transition: all .12s; line-height: 1.4; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #ea6c07; }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+.btn-sm { padding: 3px 8px; font-size: 11px; }
+.btn-danger { background: var(--red); color: #fff; }
+.btn-green { background: var(--green); color: #fff; }
+
+.search-row { display: flex; gap: 7px; margin-bottom: 10px; }
+.search-row input, .search-row select { background: var(--card2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; color: var(--text); font-size: 12px; }
+.search-row input { flex: 1; }
+.search-row input::placeholder { color: var(--muted); }
+.search-row select option { background: var(--card2); }
+
+.seed-badge { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+.s1 { background: #ffd700; color: #000; }
+.s2 { background: #c0c0c0; color: #000; }
+.s3 { background: #cd7f32; color: #fff; }
+.s4 { background: #4169e1; color: #fff; }
+.s5,.s6,.s7,.s8 { background: #2d3748; color: var(--text); border: 1px solid var(--border); }
+.sx { background: var(--card2); color: var(--muted); border: 1px solid var(--border); }
+
+.rbadge { padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 500; }
+.rEast { background: #1e3a5f; color: #60a5fa; }
+.rWest { background: #3b1f2b; color: #f472b6; }
+.rSouth { background: #1e3a2f; color: #4ade80; }
+.rMidwest { background: #3a2b10; color: #fbbf24; }
+
+.draft-order-list { max-height: calc(100vh - 280px); overflow-y: auto; }
+.pick-row { display: flex; align-items: center; gap: 7px; padding: 5px 8px; border-radius: 6px; margin-bottom: 1px; }
+.pick-row.is-current { background: rgba(249,115,22,0.13); border: 1px solid rgba(249,115,22,0.4); }
+.pick-row.is-done { opacity: 0.45; }
+.pick-num { font-size: 10px; color: var(--muted); width: 24px; text-align: right; }
+.dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.pick-tname { font-size: 12px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick-pname { font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 90px; }
+
+.team-tabs { display: flex; flex-wrap: wrap; gap: 5px; }
+.team-tab { padding: 4px 9px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; font-size: 11px; transition: all .12s; }
+.team-tab.active { background: var(--card2); }
+
+.wish-item { display: flex; align-items: center; gap: 6px; padding: 5px 7px; border-radius: 6px; background: var(--card2); margin-bottom: 3px; }
+.wish-item.is-gone { opacity: 0.38; text-decoration: line-through; }
+.wish-rank { color: var(--muted); font-size: 10px; width: 14px; }
+.wish-grip { color: var(--muted); font-size: 13px; cursor: grab; }
+.wish-name { flex: 1; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wish-score { color: var(--accent); font-size: 11px; font-weight: 600; }
+.wish-rm { color: var(--muted); cursor: pointer; padding: 0 3px; font-size: 13px; }
+.wish-rm:hover { color: var(--red); }
+.wish-draft { background: var(--accent); color: #fff; border: none; border-radius: 4px; padding: 2px 7px; font-size: 10px; cursor: pointer; }
+
+.roster-row { display: flex; align-items: center; gap: 6px; padding: 5px 4px; border-bottom: 1px solid var(--border); }
+.roster-row:last-child { border-bottom: none; }
+.roster-row.elim { text-decoration: line-through; opacity: 0.42; }
+
+.lb-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; margin-bottom: 5px; background: var(--card2); }
+.lb-rank { font-size: 16px; font-weight: 700; width: 28px; color: var(--muted); }
+.lb-rank.gold { color: #ffd700; }
+.lb-rank.silver { color: #c0c0c0; }
+.lb-rank.bronze { color: #cd7f32; }
+.lb-team { flex: 1; }
+.lb-team-name { font-weight: 600; font-size: 14px; }
+.lb-detail { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.lb-pts { font-size: 22px; font-weight: 700; color: var(--accent); }
+
+.stat-form { display: grid; gap: 10px; }
+.fg { display: flex; flex-direction: column; gap: 3px; }
+.fg label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+.fg input, .fg select { background: var(--card2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; color: var(--text); font-size: 13px; width: 100%; }
+.stat-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+.stat-preview { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); border-radius: 6px; padding: 9px; text-align: center; }
+.sp-pts { font-size: 26px; font-weight: 700; color: var(--accent); }
+.sp-label { font-size: 10px; color: var(--muted); }
+
+.log-item { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-bottom: 1px solid var(--border); }
+.log-item:last-child { border-bottom: none; }
+.log-player { font-weight: 500; flex: 1; font-size: 13px; }
+.log-round { font-size: 10px; color: var(--muted); }
+.log-stats { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.log-pts { color: var(--accent); font-weight: 600; font-size: 13px; white-space: nowrap; }
+
+.bracket-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.region-block { }
+.region-header { font-size: 14px; font-weight: 700; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+.matchups-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.matchup-card { background: var(--card2); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.matchup-label { font-size: 9px; color: var(--muted); padding: 3px 8px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.8px; }
+.team-line { display: flex; align-items: center; gap: 6px; padding: 6px 8px; cursor: pointer; transition: background .12s; }
+.team-line:hover { background: rgba(255,255,255,0.04); }
+.team-line.elim { opacity: 0.38; text-decoration: line-through; }
+.team-line .tl-seed { font-size: 10px; color: var(--muted); width: 16px; }
+.team-line .tl-name { flex: 1; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.team-line .tl-star { color: var(--accent); font-size: 10px; }
+.team-line .tl-mark { font-size: 12px; }
+
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.modal { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); width: 420px; max-width: 100%; }
+.modal-head { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 15px; }
+.modal-body { padding: 18px; }
+.modal-foot { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; gap: 7px; justify-content: flex-end; }
+.modal-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 20px; line-height: 1; padding: 0; }
+.modal-close:hover { color: var(--text); }
+
+.stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; background: var(--card2); border-radius: 7px; padding: 10px; margin-bottom: 10px; }
+.stat-cell { text-align: center; }
+.stat-cell .val { font-size: 18px; font-weight: 700; }
+.stat-cell .lbl { font-size: 10px; color: var(--muted); }
+
+.toast { position: fixed; bottom: 18px; right: 18px; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; z-index: 200; animation: fadeUp .2s ease; font-size: 13px; max-width: 280px; }
+.toast.ok { border-color: var(--green); }
+.toast.err { border-color: var(--red); }
+@keyframes fadeUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.empty { text-align: center; color: var(--muted); padding: 24px 12px; font-size: 12px; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@media (max-width: 1100px) { .grid-draft { grid-template-columns: 230px 1fr 230px; } }
+@media (max-width: 900px) { .grid-draft, .grid-lb { grid-template-columns: 1fr; } .bracket-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">🏀 MM Fantasy 2026</div>
+  <div class="nav-tab active" data-tab="draft" onclick="switchTab(this,'draft')">Draft</div>
+  <div class="nav-tab" data-tab="leaderboard" onclick="switchTab(this,'leaderboard')">Leaderboard</div>
+  <div class="nav-tab" data-tab="bracket" onclick="switchTab(this,'bracket')">Bracket</div>
+  <div class="nav-right">
+    <span class="nav-status" id="nav-status"></span>
+    <button class="btn btn-ghost btn-sm" onclick="confirmReset()" style="font-size:11px;">Reset Draft</button>
+  </div>
+</nav>
+
+<!-- ===== DRAFT TAB ===== -->
+<div id="tab-draft" class="tab-content active">
+  <div class="page">
+    <div class="grid-draft">
+
+      <!-- LEFT: Clock + Draft Order -->
+      <div>
+        <div class="clock-card" id="clock-card">
+          <div class="clock-label">On The Clock</div>
+          <div class="clock-team" id="clock-team">—</div>
+          <div class="clock-pick" id="clock-pick">Pick 1 of 120</div>
+          <div class="clock-round" id="clock-round">Round 1</div>
+        </div>
+        <div class="card">
+          <div class="card-header">Draft Order</div>
+          <div class="card-body" style="padding:8px;">
+            <div class="draft-order-list" id="draft-order"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER: Player Pool -->
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <span>Player Pool <span id="avail-count" style="color:var(--muted);font-size:11px;font-weight:400;"></span></span>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:11px;color:var(--muted);">
+                <input type="checkbox" id="show-drafted" onchange="renderPool()"> Show drafted
+              </label>
+              <select id="sort-sel" onchange="renderPool()" style="background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:3px 7px;color:var(--text);font-size:11px;">
+                <option value="projected">Projected ▼</option>
+                <option value="fantasyPerGame">F/G ▼</option>
+                <option value="ppg">PPG ▼</option>
+                <option value="rpg">RPG ▼</option>
+                <option value="apg">APG ▼</option>
+              </select>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="search-row">
+              <input type="text" id="search" placeholder="Search name or school…" oninput="renderPool()">
+              <select id="region-sel" onchange="renderPool()">
+                <option value="">All Regions</option>
+                <option value="East">East</option>
+                <option value="West">West</option>
+                <option value="South">South</option>
+                <option value="Midwest">Midwest</option>
+              </select>
+              <select id="seed-sel" onchange="renderPool()">
+                <option value="">All Seeds</option>
+                <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                <option value="7">7</option><option value="8">8</option><option value="9">9+</option>
+              </select>
+            </div>
+            <div style="overflow-x:auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Player</th>
+                    <th>School</th>
+                    <th onclick="setSort('seed')" title="Seed">Seed</th>
+                    <th onclick="setSort('ppg')">PPG</th>
+                    <th onclick="setSort('rpg')">RPG</th>
+                    <th onclick="setSort('apg')">APG</th>
+                    <th onclick="setSort('fantasyPerGame')" style="color:var(--accent)">F/G</th>
+                    <th onclick="setSort('projected')" style="color:var(--accent)">Proj.</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="pool-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Team view + Wishlist + Roster -->
+      <div>
+        <div class="card" style="margin-bottom:10px;">
+          <div class="card-header" style="flex-direction:column;align-items:flex-start;gap:6px;">
+            <span>Viewing Team</span>
+            <div class="team-tabs" id="team-tabs"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:10px;">
+          <div class="card-header">
+            <span>Wishlist <span id="wish-team-label" style="font-size:11px;font-weight:400;"></span></span>
+            <button class="btn btn-ghost btn-sm" onclick="clearWishlist()">Clear</button>
+          </div>
+          <div class="card-body" style="min-height:60px;">
+            <div id="wishlist"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span>Roster <span id="roster-team-label" style="font-size:11px;font-weight:400;"></span></span>
+            <span id="roster-pts" style="color:var(--accent);font-size:12px;font-weight:600;"></span>
+          </div>
+          <div class="card-body" style="padding:8px;">
+            <div id="roster"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== LEADERBOARD TAB ===== -->
+<div id="tab-leaderboard" class="tab-content">
+  <div class="page">
+    <div class="grid-lb">
+      <div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-header">Fantasy Standings</div>
+          <div class="card-body">
+            <div id="lb-list"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span>Game Log</span>
+            <button class="btn btn-ghost btn-sm" style="color:var(--red);" onclick="clearAllStats()">Clear Stats</button>
+          </div>
+          <div id="game-log" style="max-height:320px;overflow-y:auto;"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-header">Enter Game Stats</div>
+          <div class="card-body">
+            <div class="stat-form">
+              <div class="fg">
+                <label>Fantasy Team</label>
+                <select id="stat-team" onchange="populateStatPlayers()">
+                  <option value="">Select team…</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Player</label>
+                <select id="stat-player">
+                  <option value="">Select player…</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Round</label>
+                <select id="stat-round">
+                  <option value="R64">Round of 64</option>
+                  <option value="R32">Round of 32</option>
+                  <option value="S16">Sweet 16</option>
+                  <option value="E8">Elite Eight</option>
+                  <option value="F4">Final Four</option>
+                  <option value="NCG">Championship</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Stats</label>
+                <div class="stat-inputs">
+                  <div>
+                    <div style="font-size:10px;color:var(--muted);margin-bottom:3px;">PTS</div>
+                    <input type="number" id="s-pts" min="0" max="70" placeholder="0" oninput="previewStat()">
+                  </div>
+                  <div>
+                    <div style="font-size:10px;color:var(--muted);margin-bottom:3px;">REB</div>
+                    <input type="number" id="s-reb" min="0" max="30" placeholder="0" oninput="previewStat()">
+                  </div>
+                  <div>
+                    <div style="font-size:10px;color:var(--muted);margin-bottom:3px;">AST</div>
+                    <input type="number" id="s-ast" min="0" max="25" placeholder="0" oninput="previewStat()">
+                  </div>
+                </div>
+              </div>
+              <div class="stat-preview">
+                <div class="sp-pts" id="sp-val">0.0</div>
+                <div class="sp-label">Fantasy Points This Game</div>
+              </div>
+              <button class="btn btn-primary" style="width:100%;padding:9px;" onclick="submitStat()">Submit Stats</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Player Totals</div>
+          <div class="card-body">
+            <input type="text" id="totals-search" placeholder="Search player…" oninput="renderTotals()" style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;margin-bottom:10px;">
+            <div id="totals-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BRACKET TAB ===== -->
+<div id="tab-bracket" class="tab-content">
+  <div class="page">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+      <h2 style="font-size:16px;font-weight:700;">2026 NCAA Tournament Bracket</h2>
+      <span style="color:var(--muted);font-size:12px;">Click a team to mark as eliminated · ★ = you have a player from this school</span>
+      <button class="btn btn-ghost btn-sm" onclick="resetBracket()" style="margin-left:auto;">Reset</button>
+    </div>
+    <div class="bracket-grid" id="bracket"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal" style="display:none;" onclick="bgClose(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <span id="modal-title">Draft Player</span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot" id="modal-foot"></div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// CONSTANTS & DATA
+// ─────────────────────────────────────────────────────────────
+
+const TEAM_COLORS = [
+  '#f97316','#3b82f6','#22c55e','#a855f7','#ef4444',
+  '#f59e0b','#14b8a6','#ec4899','#84cc16','#06b6d4',
+  '#8b5cf6','#fb7185'
+];
+
+const EXP_GAMES = {1:4.0,2:3.2,3:2.7,4:2.4,5:1.9,6:1.8,7:1.7,8:1.6,9:1.4,10:1.3,11:1.3,12:1.2,13:1.0,14:1.0,15:1.0,16:1.0};
+
+const BRACKET_DEF = {
+  East:    {1:'Duke',2:'Tennessee',3:'Michigan State',4:'Purdue',5:'Marquette',6:'Clemson',7:'North Carolina',8:'Nebraska',9:'Missouri',10:'Northwestern',11:'Memphis',12:'UAB',13:'Vermont',14:'Bucknell',15:'Winthrop',16:'Norfolk State'},
+  West:    {1:'Kansas',2:'Alabama',3:'Wisconsin',4:'Michigan',5:'Oregon',6:'SMU',7:'Georgetown',8:'Colorado',9:'Oklahoma State',10:'Penn State',11:'Virginia',12:'McNeese State',13:'Furman',14:'Montana',15:'Eastern Washington',16:'Longwood'},
+  South:   {1:'Auburn',2:'Houston',3:'Texas Tech',4:'Kentucky',5:'Mississippi State',6:'Indiana',7:'San Diego State',8:'Georgia',9:'Arkansas',10:'Utah State',11:'Drake',12:'Liberty',13:'Samford',14:'Colgate',15:'UNCW',16:'Hampton'},
+  Midwest: {1:'UConn',2:'Iowa State',3:'Baylor',4:'Texas',5:'UCLA',6:'Gonzaga',7:"St. John's",8:'Iowa',9:'Wake Forest',10:'Xavier',11:'Nevada',12:'Colorado State',13:'High Point',14:'Morehead State',15:'Sacred Heart',16:'SIUE'}
+};
+
+// [id, name, school, seed, region, ppg, rpg, apg]
+const RAW = [
+  // ── 1 SEEDS ──
+  // Duke (1, East)
+  [1,'Cooper Flagg','Duke',1,'East',19.2,8.4,4.1],
+  [2,'Kon Knueppel','Duke',1,'East',15.1,5.2,2.4],
+  [3,'Tyrese Proctor','Duke',1,'East',13.2,3.6,5.4],
+  [4,'Maliq Brown','Duke',1,'East',9.8,6.8,2.1],
+  [5,'Patrick Tape','Duke',1,'East',7.2,7.4,1.0],
+  // Kansas (1, West)
+  [6,'Hunter Dickinson','Kansas',1,'West',17.8,9.8,2.2],
+  [7,'AJ Storr','Kansas',1,'West',15.4,5.1,2.5],
+  [8,'Dajuan Harris Jr.','Kansas',1,'West',8.4,3.2,6.1],
+  [9,'KJ Adams Jr.','Kansas',1,'West',11.2,5.6,1.7],
+  [10,'Shakeel Moore','Kansas',1,'West',9.6,2.9,4.4],
+  // Auburn (1, South)
+  [11,'Johni Broome','Auburn',1,'South',14.8,11.4,2.6],
+  [12,'Chad Baker-Mazara','Auburn',1,'South',13.2,5.4,2.2],
+  [13,'Denver Jones','Auburn',1,'South',12.6,3.1,5.2],
+  [14,'Tahaad Pettiford','Auburn',1,'South',11.4,2.6,3.8],
+  [15,'Chris Moore','Auburn',1,'South',8.8,4.9,1.7],
+  // UConn (1, Midwest)
+  [16,'Liam McNeeley','UConn',1,'Midwest',17.4,6.2,2.9],
+  [17,'Alex Karaban','UConn',1,'Midwest',14.4,6.6,2.0],
+  [18,'Aidan Mahaney','UConn',1,'Midwest',12.4,3.4,3.9],
+  [19,'Jaylin Stewart','UConn',1,'Midwest',11.2,4.8,2.1],
+  [20,'Solo Ball','UConn',1,'Midwest',9.8,4.2,4.4],
+  // ── 2 SEEDS ──
+  // Tennessee (2, East)
+  [21,'Chaz Lanier','Tennessee',2,'East',19.8,5.4,2.1],
+  [22,'Zakai Zeigler','Tennessee',2,'East',11.6,4.4,8.2],
+  [23,'Igor Milicic Jr.','Tennessee',2,'East',12.8,6.4,1.8],
+  [24,'Jordan Gainey','Tennessee',2,'East',10.4,3.8,2.5],
+  // Alabama (2, West)
+  [25,'Mark Sears','Alabama',2,'West',21.4,4.8,5.4],
+  [26,'Grant Nelson','Alabama',2,'West',13.2,7.8,2.2],
+  [27,'Aden Holloway','Alabama',2,'West',13.6,3.6,5.0],
+  [28,'Latrell Wrightsell Jr.','Alabama',2,'West',11.2,3.4,2.2],
+  // Houston (2, South)
+  [29,'LJ Cryer','Houston',2,'South',16.4,3.4,3.6],
+  [30,'Emanuel Sharp','Houston',2,'South',12.8,5.0,2.8],
+  [31,'Milos Uzan','Houston',2,'South',11.4,3.6,5.9],
+  [32,"Ja'Vier Francis",'Houston',2,'South',10.6,8.2,1.4],
+  // Iowa State (2, Midwest)
+  [33,'Tamin Lipsey','Iowa State',2,'Midwest',13.8,4.9,5.6],
+  [34,'Curtis Jones','Iowa State',2,'Midwest',15.2,4.4,2.8],
+  [35,'Keshon Gilbert','Iowa State',2,'Midwest',14.4,4.8,5.2],
+  [36,'Milan Momcilovic','Iowa State',2,'Midwest',12.2,5.4,2.0],
+  // ── 3 SEEDS ──
+  // Michigan State (3, East)
+  [37,'Coen Carr','Michigan State',3,'East',14.8,6.0,2.4],
+  [38,'Jaxon Kohler','Michigan State',3,'East',12.6,7.2,2.2],
+  [39,'Tre Holloman','Michigan State',3,'East',11.4,3.6,6.0],
+  [40,'Mady Sissoko','Michigan State',3,'East',9.6,7.6,1.2],
+  // Wisconsin (3, West)
+  [41,'John Tonje','Wisconsin',3,'West',18.4,5.2,2.4],
+  [42,'Nate Klatt','Wisconsin',3,'West',12.8,4.2,3.2],
+  [43,'Kamari McGee','Wisconsin',3,'West',11.2,4.8,5.4],
+  [44,'Steven Crowl','Wisconsin',3,'West',12.4,6.8,2.8],
+  // Texas Tech (3, South)
+  [45,'Darrion Williams','Texas Tech',3,'South',14.4,5.8,2.6],
+  [46,'Pop Isaacs','Texas Tech',3,'South',16.2,3.8,4.2],
+  [47,'Chance McMillian','Texas Tech',3,'South',13.8,4.2,3.8],
+  [48,'Warren Washington','Texas Tech',3,'South',10.2,8.4,1.2],
+  // Baylor (3, Midwest)
+  [49,'VJ Edgecombe','Baylor',3,'Midwest',17.8,4.4,3.2],
+  [50,'Norchad Omier','Baylor',3,'Midwest',13.6,9.2,1.8],
+  [51,'RayJ Dennis','Baylor',3,'Midwest',12.4,3.8,5.6],
+  [52,'Miro Little','Baylor',3,'Midwest',11.2,4.4,2.4],
+  // ── 4 SEEDS ──
+  // Purdue (4, East)
+  [53,'Braden Smith','Purdue',4,'East',15.8,5.4,8.2],
+  [54,'Zach Edey Jr.','Purdue',4,'East',14.4,11.8,2.0],
+  [55,'Fletcher Loyer','Purdue',4,'East',13.6,3.4,3.4],
+  // Michigan (4, West)
+  [56,'Tre Donaldson','Michigan',4,'West',14.2,4.6,5.8],
+  [57,'Danny Wolf','Michigan',4,'West',12.8,7.4,3.2],
+  [58,'Roddy Gayle Jr.','Michigan',4,'West',13.4,4.2,3.8],
+  // Kentucky (4, South)
+  [59,'Otega Oweh','Kentucky',4,'South',16.2,5.2,3.4],
+  [60,'Andrew Carr','Kentucky',4,'South',13.4,6.8,2.8],
+  [61,'LaRon Coleman','Kentucky',4,'South',11.8,3.8,4.2],
+  // Texas (4, Midwest)
+  [62,'Tre Johnson','Texas',4,'Midwest',18.4,3.8,2.6],
+  [63,'Max Abmas','Texas',4,'Midwest',16.8,3.2,4.4],
+  [64,'Arthur Kaluma','Texas',4,'Midwest',12.6,6.2,2.4],
+  // ── 5 SEEDS ──
+  [65,'Kam Jones','Marquette',5,'East',16.4,4.4,4.8],
+  [66,'Chase Ross','Marquette',5,'East',12.2,3.8,2.4],
+  [67,'Jackson Shelstad','Oregon',5,'West',18.2,4.2,5.2],
+  [68,'Kwame Evans Jr.','Oregon',5,'West',13.4,7.8,1.8],
+  [69,'Josh Minott','Mississippi State',5,'South',14.8,6.4,2.2],
+  [70,'Tolu Smith','Mississippi State',5,'South',14.2,8.8,1.6],
+  [71,'Dylan Andrews','UCLA',5,'Midwest',14.4,4.0,5.8],
+  [72,'Tyler Bilodeau','UCLA',5,'Midwest',12.8,5.6,2.2],
+  // ── 6 SEEDS ──
+  [73,'Chase Hunter','Clemson',6,'East',14.8,4.2,3.8],
+  [74,'PJ Hall','Clemson',6,'East',15.4,5.8,1.8],
+  [75,'Zhuric Phelps','SMU',6,'West',14.2,3.8,5.4],
+  [76,'Chuck Harris','SMU',6,'West',13.8,4.2,3.8],
+  [77,'Myles Rice','Indiana',6,'South',14.6,4.8,5.4],
+  [78,'Mackenzie Mgbako','Indiana',6,'South',16.2,6.4,2.8],
+  [79,'Graham Ike','Gonzaga',6,'Midwest',16.8,9.2,2.2],
+  [80,'Ryan Nembhard','Gonzaga',6,'Midwest',12.4,4.4,8.2],
+  // ── 7 SEEDS ──
+  [81,'RJ Davis','North Carolina',7,'East',18.8,4.6,4.2],
+  [82,'Elliot Cadeau','North Carolina',7,'East',12.4,3.8,6.2],
+  [83,'Malik Thomas','Georgetown',7,'West',14.4,6.2,3.4],
+  [84,'Aidan Kehoe','Georgetown',7,'West',13.2,4.8,4.2],
+  [85,'Jalen Warley','San Diego State',7,'South',12.8,4.4,5.8],
+  [86,'Reese Waters','San Diego State',7,'South',14.2,4.8,3.4],
+  [87,'Fardaws Aimaq',"St. John's",7,'Midwest',14.6,11.2,2.4],
+  [88,'Kadary Richmond',"St. John's",7,'Midwest',13.8,5.2,6.8],
+  // ── 8 SEEDS ──
+  [89,'Jamarques Lawrence','Nebraska',8,'East',14.2,4.8,3.8],
+  [90,'Rienk Mast','Nebraska',8,'East',12.8,8.4,2.2],
+  [91,"Luke O'Brien",'Colorado',8,'West',13.6,5.4,4.2],
+  [92,'KJ Simpson','Colorado',8,'West',15.8,4.2,4.8],
+  [93,'Noah Thomasson','Georgia',8,'South',12.4,4.2,5.4],
+  [94,'Dylan James','Georgia',8,'South',14.2,5.6,2.8],
+  [95,'Payton Sandfort','Iowa',8,'Midwest',14.8,5.8,2.4],
+  [96,'Josh Dix','Iowa',8,'Midwest',13.2,3.8,3.4],
+  // ── 9 SEEDS ──
+  [97,'Sean East II','Missouri',9,'East',17.8,4.2,5.8],
+  [98,'Quentin Millora-Brown','Oklahoma State',9,'West',13.4,8.8,2.2],
+  [99,'Johnell Davis','Arkansas',9,'South',15.4,5.2,3.8],
+  [100,'Kevin Miller','Wake Forest',9,'Midwest',16.2,4.8,5.4],
+  // ── 10 SEEDS ──
+  [101,'Brooks Barnhizer','Northwestern',10,'East',15.8,6.4,5.2],
+  [102,'Nick Kern Jr.','Penn State',10,'West',14.2,4.8,4.4],
+  [103,'Diante Smith','Utah State',10,'South',13.8,4.4,6.2],
+  [104,'Dayvion McKnight','Xavier',10,'Midwest',14.4,4.8,6.8],
+  // ── 11 SEEDS ──
+  [105,'Tyson Acuff','Memphis',11,'East',16.4,5.8,4.2],
+  [106,'Hunter Cattoor','Virginia',11,'West',14.2,4.4,2.8],
+  [107,'Tramon Mark','Drake',11,'South',17.2,5.4,3.8],
+  [108,'Kenan Blackshear','Nevada',11,'Midwest',15.4,6.8,4.2],
+  // ── 12 SEEDS ──
+  [109,'Tyler Nickel','UAB',12,'East',15.8,5.2,3.4],
+  [110,'Christian Shumate','McNeese State',12,'West',14.2,7.8,2.2],
+  [111,'Darius McGhee','Liberty',12,'South',21.8,4.2,4.4],
+  [112,'Isaiah Rivera','Colorado State',12,'Midwest',14.8,4.8,3.4],
+  // ── BONUS (5-8 seeds) to reach 120 ──
+  [113,'Ben Gold','Marquette',5,'East',10.4,4.2,1.8],
+  [114,'Brennan Rigsby','Oregon',5,'West',11.8,4.4,2.4],
+  [115,'Skyy Clark','UCLA',5,'Midwest',11.4,4.8,3.2],
+  [116,'Elijah Moore','Clemson',6,'East',11.2,3.8,2.8],
+  [117,'Will Baker','Gonzaga',6,'Midwest',12.4,6.4,1.6],
+  [118,'Armando Bacot','North Carolina',7,'East',14.2,10.4,2.4],
+  [119,'Simeon Wilcher',"St. John's",7,'Midwest',14.8,5.2,2.8],
+  [120,'Caleb McConnell','Nebraska',8,'East',10.8,5.2,4.4]
+];
+
+// Build player objects
+const PLAYERS = RAW.map(([id,name,school,seed,region,ppg,rpg,apg]) => {
+  const fpg = +(ppg + 0.5*rpg + 0.5*apg).toFixed(1);
+  const proj = +(fpg * (EXP_GAMES[seed]||1)).toFixed(1);
+  return { id, name, school, seed, region, ppg, rpg, apg,
+    fantasyPerGame: fpg, expectedGames: EXP_GAMES[seed]||1, projected: proj,
+    drafted: false, draftedBy: null, logs: [], totalFantasy: 0 };
+});
+
+// 12 Fantasy Teams
+const TEAMS = Array.from({length:12}, (_,i) => ({
+  id: i, name: `Team ${i+1}`, color: TEAM_COLORS[i],
+  roster: [], wishlist: [], totalPoints: 0
+}));
+
+// State
+const S = {
+  pick: 0,        // current overall pick index (0-119)
+  done: false,
+  view: 0,        // which team's wishlist/roster we're viewing
+  sortCol: 'projected',
+  eliminated: new Set()
+};
+
+// ─────────────────────────────────────────────────────────────
+// DRAFT LOGIC
+// ─────────────────────────────────────────────────────────────
+
+function teamForPick(i) {
+  const round = Math.floor(i / 12), pos = i % 12;
+  return round % 2 === 0 ? pos : 11 - pos;
+}
+
+function playerAtPick(pickIdx) {
+  if (pickIdx >= S.pick) return null;
+  const ti = teamForPick(pickIdx);
+  let n = 0;
+  for (let i = 0; i < pickIdx; i++) if (teamForPick(i) === ti) n++;
+  const pid = TEAMS[ti].roster[n];
+  return pid != null ? PLAYERS.find(p => p.id === pid) : null;
+}
+
+function draftPlayer(pid) {
+  if (S.done) return;
+  const p = PLAYERS.find(x => x.id === pid);
+  if (!p || p.drafted) return;
+  const ti = teamForPick(S.pick);
+  p.drafted = true; p.draftedBy = ti;
+  TEAMS[ti].roster.push(pid);
+  TEAMS.forEach(t => { t.wishlist = t.wishlist.filter(id => id !== pid); });
+  toast(`${p.name} → ${TEAMS[ti].name}`, 'ok');
+  S.pick++;
+  if (S.pick >= 120) { S.done = true; toast('🏀 Draft Complete!', 'ok'); }
+  render(); save();
+}
+
+function toggleWish(pid) {
+  const w = TEAMS[S.view].wishlist;
+  const i = w.indexOf(pid);
+  if (i >= 0) { w.splice(i,1); toast('Removed from wishlist'); }
+  else { w.push(pid); toast('Added to wishlist', 'ok'); }
+  renderWishlist(); renderPool(); save();
+}
+
+function clearWishlist() {
+  TEAMS[S.view].wishlist = []; renderWishlist(); renderPool(); save();
+}
+
+// Drag-to-reorder wishlist
+let dragIdx = null;
+function wDragStart(e,i) { dragIdx = i; }
+function wDragOver(e) { e.preventDefault(); }
+function wDrop(e,to) {
+  e.preventDefault();
+  if (dragIdx == null || dragIdx === to) return;
+  const w = TEAMS[S.view].wishlist;
+  const [item] = w.splice(dragIdx,1); w.splice(to,0,item);
+  dragIdx = null; renderWishlist(); save();
+}
+
+// ─────────────────────────────────────────────────────────────
+// STAT TRACKING
+// ─────────────────────────────────────────────────────────────
+
+function previewStat() {
+  const pts = +document.getElementById('s-pts').value||0;
+  const reb = +document.getElementById('s-reb').value||0;
+  const ast = +document.getElementById('s-ast').value||0;
+  document.getElementById('sp-val').textContent = (pts+0.5*reb+0.5*ast).toFixed(1);
+}
+
+function populateStatPlayers() {
+  const ti = parseInt(document.getElementById('stat-team').value);
+  const sel = document.getElementById('stat-player');
+  sel.innerHTML = '<option value="">Select player…</option>';
+  if (isNaN(ti)) return;
+  TEAMS[ti].roster.forEach(pid => {
+    const p = PLAYERS.find(x => x.id === pid);
+    if (p) { const o = document.createElement('option'); o.value=p.id; o.textContent=`${p.name} (${p.school})`; sel.appendChild(o); }
+  });
+}
+
+function submitStat() {
+  const ti = document.getElementById('stat-team').value;
+  const pid = parseInt(document.getElementById('stat-player').value);
+  const round = document.getElementById('stat-round').value;
+  const pts = +document.getElementById('s-pts').value||0;
+  const reb = +document.getElementById('s-reb').value||0;
+  const ast = +document.getElementById('s-ast').value||0;
+  if (!pid) { toast('Select a player first','err'); return; }
+  const p = PLAYERS.find(x => x.id === pid);
+  if (!p) return;
+  const fp = +(pts+0.5*reb+0.5*ast).toFixed(1);
+  p.logs.push({round,pts,reb,ast,fp,ts:Date.now()});
+  p.totalFantasy = +p.logs.reduce((s,l)=>s+l.fp,0).toFixed(1);
+  TEAMS.forEach(t => { t.totalPoints = +t.roster.reduce((s,id)=>{const x=PLAYERS.find(q=>q.id===id);return s+(x?x.totalFantasy:0);},0).toFixed(1); });
+  ['s-pts','s-reb','s-ast'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('sp-val').textContent='0.0';
+  toast(`+${fp} pts for ${p.name}!`,'ok');
+  renderLB(); renderLog(); renderTotals(); save();
+}
+
+function clearAllStats() {
+  if (!confirm('Clear all stats? This cannot be undone.')) return;
+  PLAYERS.forEach(p => { p.logs=[]; p.totalFantasy=0; });
+  TEAMS.forEach(t => { t.totalPoints=0; });
+  renderLB(); renderLog(); renderTotals(); save();
+  toast('Stats cleared');
+}
+
+// ─────────────────────────────────────────────────────────────
+// BRACKET
+// ─────────────────────────────────────────────────────────────
+
+function toggleElim(school) {
+  S.eliminated.has(school) ? S.eliminated.delete(school) : S.eliminated.add(school);
+  renderBracket(); renderPool(); renderRoster(); save();
+}
+
+function resetBracket() {
+  S.eliminated.clear(); renderBracket(); renderPool(); renderRoster(); save();
+}
+
+// ─────────────────────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────────────────────
+
+function render() {
+  renderClock(); renderDraftOrder(); renderPool();
+  renderTeamTabs(); renderWishlist(); renderRoster();
+  renderLB(); syncStatTeams(); renderLog(); renderTotals(); renderBracket();
+  updateNavStatus();
+}
+
+function updateNavStatus() {
+  const el = document.getElementById('nav-status');
+  if (S.done) { el.innerHTML = '<span style="color:var(--green);font-weight:600;">Draft Complete ✓</span>'; return; }
+  const t = TEAMS[teamForPick(S.pick)];
+  el.innerHTML = `Pick <b>${S.pick+1}/120</b> · <span style="color:${t.color};font-weight:600;">${t.name}</span> on the clock`;
+}
+
+function renderClock() {
+  if (S.done) {
+    document.getElementById('clock-team').textContent = 'Draft Complete!';
+    document.getElementById('clock-team').style.color = 'var(--green)';
+    document.getElementById('clock-pick').textContent = '120 picks made';
+    document.getElementById('clock-round').textContent = '';
+    return;
+  }
+  const ti = teamForPick(S.pick);
+  const t = TEAMS[ti];
+  const round = Math.floor(S.pick/12)+1;
+  const dir = round%2===1 ? '→ forward' : '← snake';
+  document.getElementById('clock-team').textContent = t.name;
+  document.getElementById('clock-team').style.color = t.color;
+  document.getElementById('clock-pick').textContent = `Pick ${S.pick+1} of 120`;
+  document.getElementById('clock-round').textContent = `Round ${round} · ${dir}`;
+}
+
+function renderDraftOrder() {
+  const el = document.getElementById('draft-order');
+  const start = Math.max(0, S.pick-4);
+  const end = Math.min(120, S.pick+18);
+  let html = '';
+  for (let i = start; i < end; i++) {
+    const ti = teamForPick(i);
+    const t = TEAMS[ti];
+    const cur = i===S.pick, done = i<S.pick;
+    const pp = playerAtPick(i);
+    html += `<div class="pick-row ${cur?'is-current':''} ${done?'is-done':''}">
+      <span class="pick-num">${i+1}</span>
+      <span class="dot" style="background:${t.color}"></span>
+      <span class="pick-tname">${t.name}</span>
+      ${pp?`<span class="pick-pname">${pp.name}</span>`:''}
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function setSort(col) {
+  document.getElementById('sort-sel').value = col;
+  S.sortCol = col; renderPool();
+}
+
+function renderPool() {
+  const body = document.getElementById('pool-body');
+  if (!body) return;
+  const q = document.getElementById('search').value.toLowerCase();
+  const region = document.getElementById('region-sel').value;
+  const seedF = document.getElementById('seed-sel').value;
+  const showDrafted = document.getElementById('show-drafted').checked;
+  S.sortCol = document.getElementById('sort-sel').value;
+  const wish = TEAMS[S.view].wishlist;
+
+  let list = PLAYERS.filter(p => {
+    if (!showDrafted && p.drafted) return false;
+    if (q && !p.name.toLowerCase().includes(q) && !p.school.toLowerCase().includes(q)) return false;
+    if (region && p.region !== region) return false;
+    if (seedF) {
+      if (seedF === '9' && p.seed < 9) return false;
+      else if (seedF !== '9' && p.seed !== parseInt(seedF)) return false;
+    }
+    return true;
+  });
+  list.sort((a,b) => b[S.sortCol] - a[S.sortCol]);
+
+  const avail = PLAYERS.filter(p=>!p.drafted).length;
+  document.getElementById('avail-count').textContent = `(${avail} available)`;
+
+  const sc = n => n<=4?`s${n}`:n<=8?`s${n}`:'sx';
+
+  body.innerHTML = list.map(p => {
+    const inWish = wish.includes(p.id);
+    const elim = S.eliminated.has(p.school);
+    return `<tr class="${p.drafted?'is-drafted':''}">
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          ${elim?'<span title="Team eliminated">☠</span>':''}
+          <span style="font-weight:500;">${p.name}</span>
+          ${inWish?'<span style="color:var(--accent);font-size:9px;font-weight:700;">WISH</span>':''}
+        </div>
+      </td>
+      <td>
+        <span>${p.school}</span>
+        <span class="rbadge r${p.region}" style="margin-left:5px;">${p.region[0]}</span>
+      </td>
+      <td><span class="seed-badge ${sc(p.seed)}">${p.seed}</span></td>
+      <td>${p.ppg}</td>
+      <td>${p.rpg}</td>
+      <td>${p.apg}</td>
+      <td style="color:var(--accent);font-weight:600;">${p.fantasyPerGame}</td>
+      <td style="color:var(--accent);font-weight:700;">${p.projected}</td>
+      <td>
+        ${p.drafted
+          ? `<span style="font-size:10px;color:${TEAMS[p.draftedBy].color};">${TEAMS[p.draftedBy].name}</span>`
+          : `<div style="display:flex;gap:4px;white-space:nowrap;">
+               <button class="btn btn-primary btn-sm" onclick="openDraftModal(${p.id})" ${S.done?'disabled':''}>Draft</button>
+               <button class="btn btn-ghost btn-sm" onclick="toggleWish(${p.id})" title="${inWish?'Remove from wishlist':'Add to wishlist'}">${inWish?'♥':'♡'}</button>
+             </div>`
+        }
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderTeamTabs() {
+  const el = document.getElementById('team-tabs');
+  if (!el) return;
+  el.innerHTML = TEAMS.map(t =>
+    `<button class="team-tab ${t.id===S.view?'active':''}"
+      style="${t.id===S.view?`border-color:${t.color};color:${t.color};`:''}"
+      onclick="setView(${t.id})">${t.name}</button>`
+  ).join('');
+}
+
+function setView(i) {
+  S.view = i; renderTeamTabs(); renderWishlist(); renderRoster(); renderPool();
+}
+
+function renderWishlist() {
+  const el = document.getElementById('wishlist');
+  const lbl = document.getElementById('wish-team-label');
+  const t = TEAMS[S.view];
+  if (lbl) { lbl.textContent = `— ${t.name}`; lbl.style.color = t.color; }
+  if (!t.wishlist.length) {
+    el.innerHTML = '<div class="empty">No players added.<br>Click ♡ on any player to add.</div>';
+    return;
+  }
+  el.innerHTML = t.wishlist.map((pid,i) => {
+    const p = PLAYERS.find(x=>x.id===pid);
+    if (!p) return '';
+    return `<div class="wish-item ${p.drafted?'is-gone':''}"
+        draggable="true" ondragstart="wDragStart(event,${i})"
+        ondragover="wDragOver(event)" ondrop="wDrop(event,${i})">
+      <span class="wish-rank">${i+1}</span>
+      <span class="wish-grip">⠿</span>
+      <span class="wish-name">${p.name}</span>
+      <span style="font-size:10px;color:var(--muted);">${p.school}</span>
+      <span class="wish-score">${p.fantasyPerGame}</span>
+      ${!p.drafted?`<button class="wish-draft" onclick="draftPlayer(${p.id})">Draft</button>`:''}
+      <span class="wish-rm" onclick="toggleWish(${p.id})">✕</span>
+    </div>`;
+  }).join('');
+}
+
+function renderRoster() {
+  const el = document.getElementById('roster');
+  const lbl = document.getElementById('roster-team-label');
+  const ptsEl = document.getElementById('roster-pts');
+  const t = TEAMS[S.view];
+  if (lbl) { lbl.textContent = `— ${t.name}`; lbl.style.color = t.color; }
+  if (ptsEl) ptsEl.textContent = t.totalPoints > 0 ? `${t.totalPoints.toFixed(1)} pts` : '';
+  if (!t.roster.length) { el.innerHTML = '<div class="empty">No players drafted yet.</div>'; return; }
+  el.innerHTML = t.roster.map((pid,i) => {
+    const p = PLAYERS.find(x=>x.id===pid);
+    if (!p) return '';
+    const elim = S.eliminated.has(p.school);
+    return `<div class="roster-row ${elim?'elim':''}">
+      <span style="color:var(--muted);font-size:10px;width:14px;">${i+1}</span>
+      <span style="flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.name}</span>
+      <span style="font-size:10px;color:var(--muted);">${p.school}</span>
+      <span style="color:var(--accent);font-size:12px;font-weight:600;white-space:nowrap;">${p.totalFantasy>0?p.totalFantasy.toFixed(1):''}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderLB() {
+  const el = document.getElementById('lb-list');
+  if (!el) return;
+  const sorted = [...TEAMS].sort((a,b)=>b.totalPoints-a.totalPoints);
+  el.innerHTML = sorted.map((t,i) => {
+    const rc = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    return `<div class="lb-row">
+      <span class="lb-rank ${rc}">${i+1}</span>
+      <span class="dot" style="background:${t.color}"></span>
+      <div class="lb-team">
+        <div class="lb-team-name">${t.name}</div>
+        <div class="lb-detail">${t.roster.length} players · ${t.roster.filter(pid=>{const p=PLAYERS.find(x=>x.id===pid);return p&&p.logs.length>0;}).length} with stats</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="lb-pts">${t.totalPoints.toFixed(1)}</div>
+        <div class="lb-detail">fantasy pts</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function syncStatTeams() {
+  const sel = document.getElementById('stat-team');
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Select team…</option>';
+  TEAMS.forEach(t => {
+    if (t.roster.length > 0) {
+      const o = document.createElement('option');
+      o.value = t.id; o.textContent = t.name;
+      if (t.id.toString()===cur) o.selected=true;
+      sel.appendChild(o);
+    }
+  });
+  if (cur) populateStatPlayers();
+}
+
+function renderLog() {
+  const el = document.getElementById('game-log');
+  if (!el) return;
+  const logs = [];
+  PLAYERS.forEach(p => p.logs.forEach(l => logs.push({...l,p,team:p.draftedBy!=null?TEAMS[p.draftedBy]:null})));
+  logs.sort((a,b)=>b.ts-a.ts);
+  if (!logs.length) { el.innerHTML = '<div class="empty">No stats entered yet.</div>'; return; }
+  el.innerHTML = logs.slice(0,60).map(l =>
+    `<div class="log-item">
+      <div style="flex:1;">
+        <span class="log-player">${l.p.name}</span>
+        <span class="log-round"> · ${l.round}</span>
+      </div>
+      <span class="log-stats">${l.pts}/${l.reb}/${l.ast}</span>
+      <span class="log-pts">+${l.fp}</span>
+      ${l.team?`<span style="font-size:10px;padding:1px 5px;border-radius:4px;background:${l.team.color}22;color:${l.team.color};white-space:nowrap;">${l.team.name}</span>`:''}
+    </div>`
+  ).join('');
+}
+
+function renderTotals() {
+  const el = document.getElementById('totals-list');
+  if (!el) return;
+  const q = (document.getElementById('totals-search')?.value||'').toLowerCase();
+  const list = PLAYERS
+    .filter(p => p.drafted && p.logs.length > 0)
+    .filter(p => !q || p.name.toLowerCase().includes(q) || p.school.toLowerCase().includes(q))
+    .sort((a,b)=>b.totalFantasy-a.totalFantasy);
+  if (!list.length) { el.innerHTML = '<div class="empty">No stats recorded yet.</div>'; return; }
+  el.innerHTML = list.slice(0,25).map((p,i) => {
+    const t = p.draftedBy!=null?TEAMS[p.draftedBy]:null;
+    const tpts = p.logs.reduce((s,l)=>s+l.pts,0);
+    const treb = p.logs.reduce((s,l)=>s+l.reb,0);
+    const tast = p.logs.reduce((s,l)=>s+l.ast,0);
+    return `<div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid var(--border);">
+      <span style="color:var(--muted);font-size:11px;width:18px;">${i+1}</span>
+      <div style="flex:1;overflow:hidden;">
+        <div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.name}</div>
+        <div style="font-size:10px;color:var(--muted);">${p.school} · ${tpts}pts/${treb}reb/${tast}ast</div>
+      </div>
+      ${t?`<span style="font-size:10px;padding:1px 5px;border-radius:4px;background:${t.color}22;color:${t.color};white-space:nowrap;">${t.name}</span>`:''}
+      <span style="color:var(--accent);font-weight:700;font-size:14px;">${p.totalFantasy.toFixed(1)}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderBracket() {
+  const el = document.getElementById('bracket');
+  if (!el) return;
+  const regions = ['East','West','South','Midwest'];
+  const rcol = {East:'#60a5fa',West:'#f472b6',South:'#4ade80',Midwest:'#fbbf24'};
+  const rbg  = {East:'#1e3a5f',West:'#3b1f2b',South:'#1e3a2f',Midwest:'#3a2b10'};
+  const pairs = [[1,16],[8,9],[5,12],[4,13],[6,11],[3,14],[7,10],[2,15]];
+
+  el.innerHTML = regions.map(reg => {
+    const teams = BRACKET_DEF[reg];
+    const myCount = PLAYERS.filter(p=>p.region===reg&&p.drafted).length;
+    return `<div class="region-block">
+      <div class="region-header" style="background:${rbg[reg]};color:${rcol[reg]};">
+        ${reg} Region
+        ${myCount?`<span style="font-size:11px;color:${rcol[reg]}88;">${myCount} drafted players</span>`:''}
+      </div>
+      <div class="matchups-grid">
+        ${pairs.map(([s1,s2]) => {
+          const t1=teams[s1], t2=teams[s2];
+          const e1=S.eliminated.has(t1), e2=S.eliminated.has(t2);
+          const h1=PLAYERS.some(p=>p.school===t1&&p.drafted);
+          const h2=PLAYERS.some(p=>p.school===t2&&p.drafted);
+          return `<div class="matchup-card">
+            <div class="matchup-label">R64</div>
+            <div class="team-line ${e1?'elim':''}" onclick="toggleElim('${t1}')">
+              <span class="tl-seed">${s1}</span>
+              <span class="tl-name">${t1}</span>
+              ${h1?'<span class="tl-star">★</span>':''}
+              <span class="tl-mark">${e1?'❌':'·'}</span>
+            </div>
+            <div class="team-line ${e2?'elim':''}" onclick="toggleElim('${t2}')">
+              <span class="tl-seed">${s2}</span>
+              <span class="tl-name">${t2}</span>
+              ${h2?'<span class="tl-star">★</span>':''}
+              <span class="tl-mark">${e2?'❌':'·'}</span>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────────────────────────
+
+function openDraftModal(pid) {
+  const p = PLAYERS.find(x=>x.id===pid);
+  if (!p) return;
+  if (p.drafted) { toast('Already drafted','err'); return; }
+  const ti = S.done ? null : teamForPick(S.pick);
+  const t = ti != null ? TEAMS[ti] : null;
+  const sc = n => n<=4?`s${n}`:n<=8?`s${n}`:'sx';
+  document.getElementById('modal-title').textContent = p.name;
+  document.getElementById('modal-body').innerHTML = `
+    <div style="margin-bottom:4px;">
+      <span class="seed-badge ${sc(p.seed)}" style="margin-right:6px;">${p.seed}</span>
+      <span style="color:var(--muted);font-size:13px;">${p.school} · </span>
+      <span class="rbadge r${p.region}">${p.region}</span>
+    </div>
+    <div class="stat-grid" style="margin-top:12px;">
+      <div class="stat-cell"><div class="val">${p.ppg}</div><div class="lbl">PPG</div></div>
+      <div class="stat-cell"><div class="val">${p.rpg}</div><div class="lbl">RPG</div></div>
+      <div class="stat-cell"><div class="val">${p.apg}</div><div class="lbl">APG</div></div>
+      <div class="stat-cell"><div class="val" style="color:var(--accent);">${p.fantasyPerGame}</div><div class="lbl">F/G</div></div>
+    </div>
+    <div style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:6px;padding:10px;text-align:center;margin-top:10px;">
+      <div style="font-size:28px;font-weight:700;color:var(--accent);">${p.projected}</div>
+      <div style="font-size:11px;color:var(--muted);">Projected Total Fantasy Points (${p.expectedGames} expected games)</div>
+    </div>
+    ${t?`<div style="margin-top:12px;font-size:12px;color:var(--muted);">On the clock: <span style="color:${t.color};font-weight:600;">${t.name}</span></div>`:''}
+  `;
+  document.getElementById('modal-foot').innerHTML = `
+    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+    ${t?`<button class="btn btn-primary" onclick="draftPlayer(${pid});closeModal()">Draft for ${t.name}</button>`:''}
+  `;
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function closeModal() { document.getElementById('modal').style.display='none'; }
+function bgClose(e) { if (e.target===document.getElementById('modal')) closeModal(); }
+
+// ─────────────────────────────────────────────────────────────
+// TAB SWITCHING
+// ─────────────────────────────────────────────────────────────
+
+function switchTab(el, tab) {
+  document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  el.classList.add('active');
+  if (tab==='leaderboard') { renderLB(); syncStatTeams(); renderLog(); renderTotals(); }
+  if (tab==='bracket') renderBracket();
+}
+
+// ─────────────────────────────────────────────────────────────
+// RESET
+// ─────────────────────────────────────────────────────────────
+
+function confirmReset() {
+  if (!confirm('Reset the entire draft? All picks, stats, and wishlists will be cleared.')) return;
+  PLAYERS.forEach(p => { p.drafted=false; p.draftedBy=null; p.logs=[]; p.totalFantasy=0; });
+  TEAMS.forEach(t => { t.roster=[]; t.wishlist=[]; t.totalPoints=0; });
+  S.pick=0; S.done=false; S.eliminated.clear();
+  render(); save(); toast('Draft reset','ok');
+}
+
+// ─────────────────────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────────────────────
+
+function toast(msg, type='') {
+  document.querySelector('.toast')?.remove();
+  const el = document.createElement('div');
+  el.className = `toast ${type}`; el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 2600);
+}
+
+// ─────────────────────────────────────────────────────────────
+// PERSISTENCE
+// ─────────────────────────────────────────────────────────────
+
+function save() {
+  try {
+    localStorage.setItem('mmf26', JSON.stringify({
+      pick: S.pick, done: S.done, view: S.view,
+      eliminated: [...S.eliminated],
+      teams: TEAMS.map(t=>({name:t.name,roster:t.roster,wishlist:t.wishlist,totalPoints:t.totalPoints})),
+      players: PLAYERS.map(p=>({id:p.id,drafted:p.drafted,draftedBy:p.draftedBy,logs:p.logs,totalFantasy:p.totalFantasy}))
+    }));
+  } catch(e) {}
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem('mmf26');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    S.pick = d.pick||0; S.done = d.done||false; S.view = d.view||0;
+    S.eliminated = new Set(d.eliminated||[]);
+    (d.teams||[]).forEach((t,i)=>{ if(TEAMS[i]){TEAMS[i].name=t.name;TEAMS[i].roster=t.roster||[];TEAMS[i].wishlist=t.wishlist||[];TEAMS[i].totalPoints=t.totalPoints||0;} });
+    (d.players||[]).forEach(pd=>{ const p=PLAYERS.find(x=>x.id===pd.id); if(p){p.drafted=pd.drafted;p.draftedBy=pd.draftedBy;p.logs=pd.logs||[];p.totalFantasy=pd.totalFantasy||0;} });
+  } catch(e) { console.warn('Save load failed',e); }
+}
+
+// ─────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────
+
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+load();
+render();
+</script>
+</body>
+</html>
